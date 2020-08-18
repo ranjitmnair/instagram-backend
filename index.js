@@ -13,7 +13,7 @@ const authRoute=require('./routes/auth');
 const postsRoute=require('./routes/posts');
 
 app.use('/api/user',authRoute);
-app.use('/api/posts',postsRoute);
+app.use('/api/user',postsRoute);
 
 
 
