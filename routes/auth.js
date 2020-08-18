@@ -2,8 +2,14 @@ const router=require('express').Router();
 const User=require('../models/User');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
+const {registerValidation,loginValidation}=require('../validation');
 
 router.post('/register',async(req,res)=>{
+    //validation
+    const {error}=registerValidation(req.body);
+    if(error)return res.status(400).send(error.details[0].message);
+
+
     //check if user already exists:
     const emailExist=await User.findOne({email:req.body.email});
     if(emailExist)return res.status(400).send("Email already exists");
@@ -28,6 +34,11 @@ router.post('/register',async(req,res)=>{
 });
 
 router.post('/login',async(req,res)=>{
+
+    //checking validation
+    const {error}=loginValidation(req.body);
+    if(error)return res.status(400).send(error.details[0].message);
+
     const user=await User.findOne({email:req.body.email});
     if(!user) return res.status(400).send('User not Found');
 
