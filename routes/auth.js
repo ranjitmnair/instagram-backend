@@ -7,12 +7,12 @@ const {registerValidation,loginValidation}=require('../validation');
 router.post('/register',async(req,res)=>{
     //validation
     const {error}=registerValidation(req.body);
-    if(error)return res.status(400).send(error.details[0].message);
+    if(error)return res.status(400).json(error.details[0].message);
 
 
     //check if user already exists:
     const emailExist=await User.findOne({email:req.body.email});
-    if(emailExist)return res.status(400).send("Email already exists");
+    if(emailExist)return res.status(400).json("Email already exists");
 
     //hashing password
 
@@ -47,7 +47,7 @@ router.post('/login',async(req,res)=>{
 
     const token=jwt.sign({_id:user._id},process.env.SECRET_TOKEN);
 
-    res.header('auth-token',token).send(token);
+    res.header('auth-token',token).json({token});
 
 })
 

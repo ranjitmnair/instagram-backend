@@ -10,8 +10,10 @@ mongoose.connect(process.env.MONGO_URI,{useUnifiedTopology:true,useNewUrlParser:
 
 
 const authRoute=require('./routes/auth');
-app.use('/api/user',authRoute);
+const postsRoute=require('./routes/posts');
 
+app.use('/api/user',authRoute);
+app.use('/api/posts',postsRoute);
 
 
 
