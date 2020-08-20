@@ -10,7 +10,7 @@ router.get('/getposts',verifyToken,async(req,res)=>{
     try {
         const posts=await Post
         .find()
-        .populate("postedBy","_id");
+        .populate("postedBy","_id name");
 
         return res.status(200).json({posts});
     } catch (error) {
@@ -39,5 +39,16 @@ router.post('/createpost',verifyToken,async(req,res)=>{
     }
 
 })
+
+router.get('/myposts',verifyToken,async(req,res)=>{
+    try {
+        const posts=await Post.find({postedBy:req.user._id})
+        .populate("postedBy","_id name");
+         return res.status(200).json({posts});
+    } catch (error) {
+        return res.status(401).send({error});
+    }
+})
+
 
 module.exports=router;
