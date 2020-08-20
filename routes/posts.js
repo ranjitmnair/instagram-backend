@@ -50,5 +50,36 @@ router.get('/myposts',verifyToken,async(req,res)=>{
     }
 })
 
+//like route
+router.put('/like',verifyToken,async(req,res)=>{
+    const post=await Post.findByIdAndUpdate(req.body.postId,{
+        $push:{likes:req.user._id},
+        $inc: { likeCount: 1 } 
+    },{
+        new:true
+    })
+    
+    try {
+        return res.status(200).json(post)
+    } catch (error) {
+        return res.status(400).json({error});
+    }
+})
+
+//unlike feature
+router.put('/unlike',verifyToken,async(req,res)=>{
+    const post=await Post.findByIdAndUpdate(req.body.postId,{
+        $pull:{likes:req.user._id},
+        $inc: { likeCount: -1 } 
+    },{
+        new:true
+    })
+    try {
+        return res.status(200).json(post)
+    } catch (error) {
+        return res.status(400).json({error});
+    }
+})
+
 
 module.exports=router;
