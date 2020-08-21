@@ -89,19 +89,24 @@ router.put ('/like', verifyToken, async (req, res) => {
   }
 });
 
-//unlike feature
-// router.put('/unlike',verifyToken,async(req,res)=>{
-//     const post=await Post.findByIdAndUpdate(req.body.postId,{
-//         $pull:{likes:req.user._id},
-//         $inc: { likeCount: -1 }
-//     },{
-//         new:true
-//     })
-//     try {
-//         return res.status(200).json(post)
-//     } catch (error) {
-//         return res.status(400).json({error});
-//     }
-// })
+//comment feature
+router.put('/comment',verifyToken,async(req,res)=>{
+    const comment ={
+        text: req.body.text , //text of comment
+        postedBy:req.user._id
+    }
+    const post=await Post.findByIdAndUpdate(req.body.postId,{
+        $push:{comments:comment},
+        $inc: { commentCount: 1 }
+    },{
+        new:true
+    })
+    .populate("comments.postedBy","_id name")
+    try {
+        return res.status(200).json(post)
+    } catch (error) {
+        return res.status(400).json({error});
+    }
+})
 
 module.exports = router;
