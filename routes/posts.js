@@ -46,13 +46,31 @@ router.get ('/myposts', verifyToken, async (req, res) => {
   }
 });
 
+//delete post
+router.delete('/deletepost/:postId',verifyToken,async(req,res)=>{
+    const post= await Post.findOne({_id:req.params.postId})
+    .populate("postedBy","_id");
+    try {
+       if(String(post.postedBy._id)==String(req.user._id)){
+            const deletePost=post.remove();
+            return res.status(200).json("post deleted successfully.");
+       }
+    } catch (error) {
+        return res.status(401).json({error});
+    }
+})
+
+
+
+
+
 //like dislike  route
 router.put ('/like', verifyToken, async (req, res) => {
   const currentPost = await Post.findById (req.body.postId);
   for(var i=0;i<currentPost.likes.length;i++){
       if(String(currentPost.likes[i])==String(req.user._id)){
   
-         console.log(currentPost.likes[i]);
+       //  console.log(currentPost.likes[i]);
      const post = await Post.findByIdAndUpdate (
         req.body.postId,
         {
