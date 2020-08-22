@@ -11,9 +11,11 @@ mongoose.connect(process.env.MONGO_URI,{useUnifiedTopology:true,useNewUrlParser:
 
 const authRoute=require('./routes/auth');
 const postsRoute=require('./routes/posts');
+const profileRoute=require('./routes/profile');
 
 app.use('/api/user',authRoute);
 app.use('/api/user',postsRoute);
+app.use('/api/user',profileRoute);
 
 
 
