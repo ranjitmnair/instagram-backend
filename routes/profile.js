@@ -76,4 +76,16 @@ router.put ('/profile/follow', verifyToken, async (req, res) => {
   }
 });
 
+
+router.post('/searchusers',async(req,res)=>{
+  let username=req.body.username;
+  const user =await User.find({name:username});
+  try {
+      res.json(user);
+  } catch (error) {
+      res.status(404).json(error)
+  }
+})
+
+
 module.exports = router;

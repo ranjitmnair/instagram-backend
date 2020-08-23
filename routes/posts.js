@@ -5,15 +5,28 @@ const jwt = require ('jsonwebtoken');
 const verifyToken = require ('../middleware/verifyToken');
 const {postValidation} = require ('../validation');
 
+// router to get all posts
 router.get ('/getposts', verifyToken, async (req, res) => {
   try {
     const posts = await Post.find ().populate ('postedBy', '_id name');
+    return res.status (200).json({posts});
+  } catch (error) {
+    return res.status(400).json({error});
+  }
+});
+
+// router to get following people's posts
+router.get ('/getfollowingposts', verifyToken, async (req, res) => {
+  try {
+    const posts = await Post.find({postedBy:{$in:req.user.following}}).populate ('postedBy', '_id name')
+    .sort('-createdAt');
 
     return res.status (200).json ({posts});
   } catch (error) {
     return res.status (400).json ({error});
   }
 });
+
 
 router.post ('/createpost', verifyToken, async (req, res) => {
   // validation
