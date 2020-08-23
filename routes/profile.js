@@ -23,7 +23,9 @@ router.get ('/profile/:id', verifyToken, async (req, res) => {
 //follow unfollow
 
 router.put ('/profile/follow', verifyToken, async (req, res) => {
+
   const userFollowed = await User.findById (req.body.followId);
+  if(req.user._id.toString()==req.body.followId)return res.status(400).json("cannot follow self");
   for (var i = 0; i < userFollowed.followers.length; i++) {
     if (userFollowed.followers[i].toString () == req.user._id.toString ()) {
       const tofollow = await User.findByIdAndUpdate (
